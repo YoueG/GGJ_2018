@@ -103,6 +103,14 @@ public class CubeArray : MonoBehaviour {
 			
 
 	}
+
+#if UNITY_EDITOR
+	void OnDrawGizmos()
+	{
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(new Vector3(m_width/2, m_height/2, 1), new Vector3(m_width, m_height, 1));
+    }
+#endif
 }
 
 /*

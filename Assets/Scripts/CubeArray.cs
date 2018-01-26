@@ -12,7 +12,7 @@ public class CubeArray : MonoBehaviour {
 	static int WIDTH, HEIGHT;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		isCube = new bool[m_width,m_height];
 		updateArrayBool ();
 
@@ -40,7 +40,7 @@ public class CubeArray : MonoBehaviour {
 			int x = (int)cube.transform.position.x;
 			int y = (int)cube.transform.position.y;
 
-			if (x >= 0 && x < isCube.GetLength (0) && y >= 0 && y < isCube.GetLength (1))
+			if (x >= 0 && x < m_width/2 && y >= 0 && y < m_height)
 			{
 				bool cubeSetted = isCube [x, y]; 
 				if (cubeSetted)
@@ -67,9 +67,9 @@ public class CubeArray : MonoBehaviour {
 
 		//Check if there is any full line 
 		List<int> isFullLine = new List<int> (); 
-		for (int i = 0; i < isCube.GetLength (1); i++) {
+		for (int i = 0; i < m_height; i++) {
 			bool isFull = true; 
-			for (int j = 0; j < isCube.GetLength (0); j++) {
+			for (int j = 0; j < m_width; j++) {
 				if (!isCube [j, i])
 					isFull = false; 	
 			} 

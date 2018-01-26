@@ -14,6 +14,7 @@ public class Movement : MonoBehaviour {
 	float time; 
 
 	CubeArray cA; 
+	Vector3 m_spawn;
 
 	//The actual group which can rotate and will move down
 	public GameObject actualGroup; 
@@ -24,6 +25,7 @@ public class Movement : MonoBehaviour {
 		timestep = initTimestep;
 
 		m_direction = m_goRight ? Vector3.right : Vector3.left;
+		m_spawn = m_goRight ? CubeArray.getLeft() : CubeArray.getRight();
 	}
 
 	public void startGame(){
@@ -84,7 +86,7 @@ public class Movement : MonoBehaviour {
 	GameObject spawnNext(){
 		int i = Random.Range(0, groups.Length);
 		return Instantiate(groups[i],
-			CubeArray.getLeft(),
+			m_spawn,
 			Quaternion.identity);
 	}
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 	public GameObject startButton, window, windowPause, pauseBtn;
@@ -27,7 +28,7 @@ public class GameManager : MonoBehaviour {
 
 	public void OnClickRestart(){
 		windowPause.SetActive (false); 
-		Application.LoadLevel (Application.loadedLevelName); 
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
 
 	public void OnClickPause(){

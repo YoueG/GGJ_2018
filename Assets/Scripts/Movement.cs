@@ -27,7 +27,13 @@ public class Movement : MonoBehaviour {
 	}
 
 	public void startGame(){
-		actualGroup = this.gameObject.GetComponent<GroupSpawner> ().spawnNext ();
+		actualGroup = spawnNext ();
+
+		if(m_goRight)
+			actualGroup.GetComponent<Rotation>().rotateLeft (false);
+		else
+			actualGroup.GetComponent<Rotation>().rotateRight (false);
+
 	}
 	//Move down in interval of timestep
 	void Update () {
@@ -42,7 +48,7 @@ public class Movement : MonoBehaviour {
 	bool m_canMoove = true;
 	void checkForInput(){
 		if (Input.GetButtonDown("RotR"))
-			actualGroup.GetComponent<Rotation>().rotateRight (false); 
+			actualGroup.GetComponent<Rotation>().rotateRight (false);
 		else if (Input.GetButtonDown("RotL"))
 			actualGroup.GetComponent<Rotation>().rotateLeft (false); 
 
@@ -67,8 +73,19 @@ public class Movement : MonoBehaviour {
 			timestep = 0.05F; 
 		else
 			timestep = initTimestep;
-			
+
 		cA.updateArrayBool ();
+	}
+
+	[SerializeField]
+	GameObject[] groups; 
+
+	//Spawn the next group
+	GameObject spawnNext(){
+		int i = Random.Range(0, groups.Length);
+		return Instantiate(groups[i],
+			CubeArray.getLeft(),
+			Quaternion.identity);
 	}
 
 	void move(Vector3 pos){
@@ -87,7 +104,13 @@ public class Movement : MonoBehaviour {
 	//Handle spawning a new group and check if there is any intersection after spawning
 	private void spawnNew(){
 		actualGroup.GetComponent<Rotation> ().isActive = false; 
-		actualGroup = gameObject.GetComponent<GroupSpawner> ().spawnNext ();
+
+		actualGroup = spawnNext ();
+		if(m_goRight)
+			actualGroup.GetComponent<Rotation>().rotateLeft (false);
+		else
+			actualGroup.GetComponent<Rotation>().rotateRight (false);
+
 		actualGroup.GetComponent<Rotation> ().isActive = true;
 		if (!cA.updateArrayBool ()) {
 			//Theres a better way, but for now - keep it simple :) 

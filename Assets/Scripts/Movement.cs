@@ -39,22 +39,35 @@ public class Movement : MonoBehaviour {
 		checkForInput (); 
 	}
 
+	bool m_canMoove = true;
 	void checkForInput(){
-		if (Input.GetKeyDown (KeyCode.D)) {
+		if (Input.GetButtonDown("RotR"))
 			actualGroup.GetComponent<Rotation>().rotateRight (false); 
-		} else if (Input.GetKeyDown (KeyCode.Q)) {
+		else if (Input.GetButtonDown("RotL"))
 			actualGroup.GetComponent<Rotation>().rotateLeft (false); 
+
+		if (Input.GetAxisRaw("Vertical") == 1)
+		{
+			if(m_canMoove)
+				move (Vector3.up);
+
+			m_canMoove = false;
 		}
-		if (Input.GetKeyDown (KeyCode.A)) {
-			move (Vector3.left);
-		} else if (Input.GetKeyDown (KeyCode.E)) {
-			move (Vector3.right);
+		else if (Input.GetAxisRaw("Vertical") == -1)
+		{
+			if(m_canMoove)
+				move (Vector3.down);
+
+			m_canMoove = false;
 		}
-		if (Input.GetKeyDown (KeyCode.S)) {
+		else
+			m_canMoove = true;
+		
+		if (Input.GetButton("Accel"))
 			timestep = 0.05F; 
-		} else if (Input.GetKeyUp (KeyCode.Z)) {
+		else
 			timestep = initTimestep;
-		}
+			
 		cA.updateArrayBool ();
 	}
 
@@ -63,7 +76,7 @@ public class Movement : MonoBehaviour {
 			actualGroup.transform.position += pos; 
 			if (!cA.updateArrayBool ()) {
 				actualGroup.transform.position -= pos; 
-				gameObject.GetComponent<ManageAudio> ().playCantMove (); 
+				ManageAudio.instance.playCantMove (); 
 				if(pos == m_direction){
 					spawnNew (); 
 				}
@@ -77,9 +90,8 @@ public class Movement : MonoBehaviour {
 		actualGroup = gameObject.GetComponent<GroupSpawner> ().spawnNext ();
 		actualGroup.GetComponent<Rotation> ().isActive = true;
 		if (!cA.updateArrayBool ()) {
-			print ("GAME OVER!!!"); 
 			//Theres a better way, but for now - keep it simple :) 
-			Application.LoadLevel (Application.loadedLevelName); 
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		} else {
 			cA.checkForFullLine ();
 		} 

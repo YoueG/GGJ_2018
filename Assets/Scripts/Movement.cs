@@ -25,7 +25,7 @@ public class Movement : MonoBehaviour
 	//The actual group which can rotate and will move down
 	public Rotation actualGroup;
 
-	GameObject preparedPiece;
+	Rotation preparedPiece;
 
 
 	void Start(){
@@ -39,12 +39,7 @@ public class Movement : MonoBehaviour
 	public void startGame()
 	{
 		prepareNext();
-
-		if(m_goRight)
-			actualGroup.rotateLeft (false);
-		else
-			actualGroup.rotateRight (false);
-
+		Invoke("spawnNew",1);
 	}
 	//Move down in interval of timestep
 	void Update ()
@@ -113,16 +108,27 @@ public class Movement : MonoBehaviour
 
 	void prepareNext()
 	{
-		preparedPiece = Instantiate(groups[Random.Range(0, groups.Length)], m_InitPos.position, Quaternion.identity, cA.transform);
-		preparedPiece.GetComponent<Rotation>().goRight = m_goRight;
+		preparedPiece = Instantiate(groups[Random.Range(0, groups.Length)], m_InitPos.position, Quaternion.identity, cA.transform).GetComponent<Rotation>();
+		preparedPiece.goRight = m_goRight;
+		preparedPiece.GetComponent<Animation>().enabled = true;
+
+		if(m_goRight)
+			preparedPiece.rotateLeft(false);
+		else
+			preparedPiece.rotateRight(false);
 	}
 
 	//Handle spawning a new group and check if there is any intersection after spawning
 	void spawnNew()
 	{
-		actualGroup.GetComponent<Rotation>().isActive = false; 
+		if(actualGroup)
+			actualGroup.isActive = false; 
 
-		actualGroup = preparedPiece.GetComponent<Rotation>();
+		actualGroup = preparedPiece;
+		actualGroup.transform.position = m_startPos;
+		foreach (Transform cube in actualGroup.transform)
+			cube.tag = "Cube";
+
 		prepareNext();
 
 		if(m_goRight)
@@ -130,7 +136,7 @@ public class Movement : MonoBehaviour
 		else
 			actualGroup.rotateRight (false);
 
-		actualGroup.GetComponent<Rotation>().isActive = true;
+		actualGroup.isActive = true;
 
 		// GameOver
 		if (!cA.updateArrayBool(m_goRight))

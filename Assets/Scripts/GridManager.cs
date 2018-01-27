@@ -39,31 +39,25 @@ public class GridManager : MonoBehaviour {
 	{
 		isCube = new bool[m_width,m_height];
 
+		foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
+			if(cube.transform.parent != actualGroup)
+				isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
+
 		bool notTouching = true;
 
 		foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
 		{
-			int x = (int)cube.transform.position.x;
-			int y = (int)cube.transform.position.y;
-
-			if((goRight && x <= MIDDLE) || (!goRight && x >= MIDDLE-1))
+			if(cube.transform.parent == actualGroup)
 			{
-				if(y >= 0 && y < m_height)
+				int x = (int)cube.transform.position.x;
+				int y = (int)cube.transform.position.y;
+
+				if(x*y <= isCube.Length && y >= 0 && y < m_height)
 				{
-					// On line
-					if(goRight && x == MIDDLE && actualGroup && cube.transform.parent == actualGroup)
-						notTouching = false;
-					else if(!goRight && x == MIDDLE-1 && actualGroup && cube.transform.parent == actualGroup)
-						notTouching = false;
-					else if(x*y <= isCube.Length)
+					if (isCube[x, y])
 					{
-						if (isCube [x, y])
-						{
-							notTouching = false;
-							Destroy(Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
-						}
-						else
-							isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
+						notTouching = false;
+						Destroy(Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
 					}
 				}
 				else
@@ -72,6 +66,7 @@ public class GridManager : MonoBehaviour {
 					notTouching = false;
 				}
 			}
+			
 		}
 
 		return notTouching;

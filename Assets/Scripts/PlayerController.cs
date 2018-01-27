@@ -133,9 +133,9 @@ public class PlayerController : MonoBehaviour
 		prepareNext();
 
 		// GameOver
-		if (!m_gridManager.updateArrayBool(m_goRight))
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-		else
+		// if (!m_gridManager.updateArrayBool(m_goRight))
+		// 	SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		// else
 			m_gridManager.checkForFullLine (m_direction);
 
 		actualGroup.isActive = true;

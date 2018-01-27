@@ -18,10 +18,14 @@ public class Movement : MonoBehaviour
 	float time; 
 
 	CubeArray cA; 
-	Vector3 m_spawn;
+	Vector3 m_startPos;
+	[SerializeField]
+	Transform m_InitPos;
 
 	//The actual group which can rotate and will move down
-	public Rotation actualGroup; 
+	public Rotation actualGroup;
+
+	GameObject preparedPiece;
 
 
 	void Start(){
@@ -29,11 +33,12 @@ public class Movement : MonoBehaviour
 		timestep = initTimestep;
 
 		m_direction = m_goRight ? Vector3.right : Vector3.left;
-		m_spawn = m_goRight ? CubeArray.getLeft() : CubeArray.getRight();
+		m_startPos = m_goRight ? CubeArray.getLeft() : CubeArray.getRight();
 	}
 
-	public void startGame(){
-		actualGroup = spawnNext();
+	public void startGame()
+	{
+		prepareNext();
 
 		if(m_goRight)
 			actualGroup.rotateLeft (false);
@@ -87,18 +92,7 @@ public class Movement : MonoBehaviour
 	}
 
 	[SerializeField]
-	GameObject[] groups; 
-
-	//Spawn the next group
-	Rotation spawnNext()
-	{
-		int i = Random.Range(0, groups.Length);
-
-		GameObject next = Instantiate(groups[i], m_spawn, Quaternion.identity, cA.transform);
-		next.GetComponent<Rotation>().goRight = m_goRight;
-
-		return next.GetComponent<Rotation>();
-	}
+	GameObject[] groups;
 
 	void move(Vector3 dir)
 	{
@@ -117,19 +111,26 @@ public class Movement : MonoBehaviour
 		}
 	}
 
-	//Handle spawning a new group and check if there is any intersection after spawning
-	private void spawnNew()
+	void prepareNext()
 	{
-		actualGroup.GetComponent<Rotation> ().isActive = false; 
+		preparedPiece = Instantiate(groups[Random.Range(0, groups.Length)], m_InitPos.position, Quaternion.identity, cA.transform);
+		preparedPiece.GetComponent<Rotation>().goRight = m_goRight;
+	}
 
-		actualGroup = spawnNext();
+	//Handle spawning a new group and check if there is any intersection after spawning
+	void spawnNew()
+	{
+		actualGroup.GetComponent<Rotation>().isActive = false; 
+
+		actualGroup = preparedPiece.GetComponent<Rotation>();
+		prepareNext();
 
 		if(m_goRight)
 			actualGroup.rotateLeft (false);
 		else
 			actualGroup.rotateRight (false);
 
-		actualGroup.GetComponent<Rotation> ().isActive = true;
+		actualGroup.GetComponent<Rotation>().isActive = true;
 
 		// GameOver
 		if (!cA.updateArrayBool(m_goRight))

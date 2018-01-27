@@ -49,7 +49,7 @@ public class CubeArray : MonoBehaviour {
 
 			if((goRight && x <= MIDDLE) || (!goRight && x >= MIDDLE-1))
 			{
-				if(x >= 0 && x < m_width && y >= 0 && y < m_height)
+				if(y >= 0 && y < m_height)
 				{
 					// On line
 					if(goRight && x == MIDDLE && actualGroup && cube.transform.parent == actualGroup)
@@ -71,7 +71,7 @@ public class CubeArray : MonoBehaviour {
 				}
 
 				if(!notTouching)
-					Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0));
+					Destroy(Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
 			}
 		}
 

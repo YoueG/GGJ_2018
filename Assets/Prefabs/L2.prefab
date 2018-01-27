@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4633395032040584}
   - component: {fileID: 114063271924135908}
+  - component: {fileID: 111139077230528114}
   m_Layer: 0
   m_Name: L2
   m_TagString: Untagged
@@ -328,6 +329,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1575042913416434}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!111 &111139077230528114
+Animation:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1109526886543692}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 6b423e68c6b4ce540b863d224ffbe24d, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 6b423e68c6b4ce540b863d224ffbe24d, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!114 &114063271924135908
 MonoBehaviour:
   m_ObjectHideFlags: 1

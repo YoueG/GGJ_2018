@@ -9,7 +9,7 @@ public class CubeArray : MonoBehaviour {
 
 	[SerializeField]
 	int m_width, m_height;
-	static int WIDTH, HEIGHT;
+	static int WIDTH, HEIGHT, MIDDLE;
 
 	// Use this for initialization
 	void Awake () {
@@ -18,6 +18,8 @@ public class CubeArray : MonoBehaviour {
 
 		WIDTH = m_width;
 		HEIGHT = m_height;
+
+		MIDDLE = m_width/2;
 	}
 
 	public static Vector3 getLeft()
@@ -31,27 +33,27 @@ public class CubeArray : MonoBehaviour {
 	}
 
 	//Update the cube array and return false if there is any intersection between two cubes
-	public bool updateArrayBool(){
+	public bool updateArrayBool()
+	{
 		isCube = new bool[m_width,m_height];
-
 		bool withoutIntersection = true; 
+
 		foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
 		{
 			int x = (int)cube.transform.position.x;
 			int y = (int)cube.transform.position.y;
 
-			if (x >= 0 && x < m_width/2 && y >= 0 && y < m_height)
+			if (x >= 0 && x < MIDDLE && y >= 0 && y < m_height)
 			{
-				bool cubeSetted = isCube [x, y]; 
+				bool cubeSetted = isCube [x, y];
+
 				if (cubeSetted)
 				{
 					//Position in array is always setted
 					withoutIntersection = false;
 				}
 				else
-				{
 					isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
-				}
 			}
 			else
 			{
@@ -59,56 +61,60 @@ public class CubeArray : MonoBehaviour {
 				withoutIntersection = false; 
 			}
 		}
+
 		return withoutIntersection; 
 	}
 
 
-	public void checkForFullLine(){
-
+	public void checkForFullLine(Vector3 direction)
+	{
 		//Check if there is any full line 
-		List<int> isFullLine = new List<int> (); 
-		for (int i = 0; i < m_height; i++) {
+		List<int> isFullLine = new List<int> ();
+
+		for (int x = 0; x < m_width; x++)
+		{
 			bool isFull = true; 
-			for (int j = 0; j < m_width; j++) {
-				if (!isCube [j, i])
-					isFull = false; 	
-			} 
+			for (int y = 0; y < m_height; y++)
+				if (!isCube [x, y])
+					isFull = false;
+
 			if (isFull)
-				isFullLine.Add (i); 
+				isFullLine.Add (x);
 		}
+
+		GameObject[] cubeArray = GameObject.FindGameObjectsWithTag("Cube");
 
 		//For each full line
-		for(int i = 0; i < isFullLine.Count; i++){
-			//Delete all cubes in a row
-			foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube")) {
-				int y = (int)cube.transform.position.y;
-				if(isFullLine[i] == y){
-					//Heres goes a incredible cool explosion effect!!!
-					Destroy (cube); 
+		for(int i = 0; i < isFullLine.Count; i++)
+		{
+			foreach (GameObject cube in cubeArray)
+			{
+				//Delete line
+				if(isFullLine[i] == (int)cube.transform.position.x)
+					Destroy (cube);
+				//Displace
+				else
+				{
+					if(direction == Vector3.right)
+						cube.transform.position += cube.transform.position.x <= isFullLine[i] ? 2*direction : direction;
+					else
+						cube.transform.position += cube.transform.position.x >= isFullLine[i] ? 2*direction : direction;					
 				}
 			}
-			//Set down all cubes above the deleted row
-			foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube")) {
-				int y = (int)cube.transform.position.y;
-				if(isFullLine[i] < y){
-					cube.transform.position += Vector3.down; 
-				}
-			}
-			ManageAudio.instance.PlayFullLine (); 
 
-			for (int j = 0; j < isFullLine.Count; j++) {
+			ManageAudio.instance.PlayFullLine(); 
+
+			for (int j = 0; j < isFullLine.Count; j++)
 				isFullLine [j] -= 1;
-			}
 		}
-			
-
 	}
 
 #if UNITY_EDITOR
 	void OnDrawGizmos()
 	{
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(new Vector3(m_width/2, m_height/2, 1), new Vector3(m_width, m_height, 1));
+        Gizmos.DrawWireCube(new Vector3(MIDDLE - MIDDLE/2, m_height/2, 1) - Vector3.one/2, new Vector3(MIDDLE, m_height, 1));
+		Gizmos.DrawWireCube(new Vector3(MIDDLE + MIDDLE/2, m_height/2, 1) - Vector3.one/2, new Vector3(MIDDLE, m_height, 1));
     }
 #endif
 }

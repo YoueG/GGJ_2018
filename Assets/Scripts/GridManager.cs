@@ -55,11 +55,11 @@ public class GridManager : MonoBehaviour {
 						notTouching = false;
 					else if(!goRight && x == MIDDLE-1 && actualGroup && cube.transform.parent == actualGroup)
 						notTouching = false;
-					else
+					else if(x*y <= isCube.Length)
 					{
 						if (isCube [x, y])
 						{
-							notTouching = false;							
+							notTouching = false;
 							Destroy(Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
 						}
 						else

@@ -11,6 +11,9 @@ public class CubeArray : MonoBehaviour {
 	int m_width, m_height;
 	static int WIDTH, HEIGHT, MIDDLE;
 
+	[SerializeField]
+	GameObject m_particles;
+
 	// Use this for initialization
 	void Awake () {
 		isCube = new bool[m_width,m_height];
@@ -33,9 +36,11 @@ public class CubeArray : MonoBehaviour {
 	}
 
 	//Update the cube array and return false if there is any intersection between two cubes
-	public bool updateArrayBool(bool goRight, GameObject actualGroup = null)
+	public bool updateArrayBool(bool goRight, Transform actualGroup = null)
 	{
 		isCube = new bool[m_width,m_height];
+
+		bool notTouching = true;
 
 		foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
 		{
@@ -44,17 +49,17 @@ public class CubeArray : MonoBehaviour {
 
 			if((goRight && x <= MIDDLE) || (!goRight && x >= MIDDLE-1))
 			{
-				if(x >= 0 && x < m_width && y >= 0 && y < m_height)
+				if(y >= 0 && y < m_height)
 				{
 					// On line
-					if(goRight && x == MIDDLE && actualGroup && cube.transform.parent == actualGroup.transform)
-						return false;
-					else if(!goRight && x == MIDDLE-1 && actualGroup && cube.transform.parent == actualGroup.transform)
-						return false;
+					if(goRight && x == MIDDLE && actualGroup && cube.transform.parent == actualGroup)
+						notTouching = false;
+					else if(!goRight && x == MIDDLE-1 && actualGroup && cube.transform.parent == actualGroup)
+						notTouching = false;
 					else
 					{
 						if (isCube [x, y])
-							return false;
+							notTouching = false;
 						else
 							isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
 					}
@@ -62,12 +67,15 @@ public class CubeArray : MonoBehaviour {
 				else
 				{
 					//Position is out of range 
-					return false;
+					notTouching = false;
 				}
+
+				if(!notTouching)
+					Destroy(Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
 			}
 		}
 
-		return true;
+		return notTouching;
 	}
 
 

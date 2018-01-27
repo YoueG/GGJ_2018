@@ -80,6 +80,6 @@ Material:
     - _ZWrite: 0
     m_Colors:
     - <noninit>: {r: 0, g: 1, b: 0, a: NaN}
-    - _Color: {r: 1, g: 0.5586207, b: 0, a: 1}
+    - _Color: {r: 1, g: 0.5586207, b: 0, a: 0.8627451}
     - _EmissionColor: {r: 0.112, g: 0.112, b: 0.112, a: 1}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

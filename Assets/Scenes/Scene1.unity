@@ -1405,6 +1405,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_width: 36
   m_height: 10
+  m_particles: {fileID: 1937736237892684, guid: b3cdd10c5d9e09b46ad02020e73d5b81,
+    type: 2}
 --- !u!4 &1301278809
 Transform:
   m_ObjectHideFlags: 0

@@ -11,6 +11,9 @@ public class CubeArray : MonoBehaviour {
 	int m_width, m_height;
 	static int WIDTH, HEIGHT, MIDDLE;
 
+	[SerializeField]
+	GameObject m_particles;
+
 	// Use this for initialization
 	void Awake () {
 		isCube = new bool[m_width,m_height];
@@ -37,6 +40,8 @@ public class CubeArray : MonoBehaviour {
 	{
 		isCube = new bool[m_width,m_height];
 
+		bool notTouching = true;
+
 		foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
 		{
 			int x = (int)cube.transform.position.x;
@@ -48,13 +53,13 @@ public class CubeArray : MonoBehaviour {
 				{
 					// On line
 					if(goRight && x == MIDDLE && actualGroup && cube.transform.parent == actualGroup.transform)
-						return false;
+						notTouching = false;
 					else if(!goRight && x == MIDDLE-1 && actualGroup && cube.transform.parent == actualGroup.transform)
-						return false;
+						notTouching = false;
 					else
 					{
 						if (isCube [x, y])
-							return false;
+							notTouching = false;
 						else
 							isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
 					}
@@ -62,12 +67,15 @@ public class CubeArray : MonoBehaviour {
 				else
 				{
 					//Position is out of range 
-					return false;
+					notTouching = false;
 				}
+
+				if(!notTouching)
+					Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0));
 			}
 		}
 
-		return true;
+		return notTouching;
 	}
 
 

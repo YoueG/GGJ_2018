@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 1; 
 		window.SetActive (false); 
 
-		foreach (var mov in FindObjectsOfType<Movement>())
+		foreach (var mov in FindObjectsOfType<PlayerController>())
 		{
 			mov.startGame();
 		}

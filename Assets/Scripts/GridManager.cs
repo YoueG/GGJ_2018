@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 
-public class CubeArray : MonoBehaviour {
+public class GridManager : MonoBehaviour {
 	bool[,] isCube;
 
 	[SerializeField]
@@ -63,15 +63,15 @@ public class CubeArray : MonoBehaviour {
 						else
 							isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
 					}
+
+					if(!notTouching)
+						Destroy(Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
 				}
 				else
 				{
 					//Position is out of range 
 					notTouching = false;
 				}
-
-				if(!notTouching)
-					Destroy(Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
 			}
 		}
 

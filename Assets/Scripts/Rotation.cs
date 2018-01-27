@@ -11,14 +11,14 @@ public class Rotation : MonoBehaviour {
 	Vector3[][] rotation; 
 	public Transform[] blocks; 
 	public string type; 
-	CubeArray cA;
+	GridManager cA;
 
 	public bool goRight;
 
 
 	// Use this for initialization
 	void Awake () { 
-		cA = FindObjectOfType<CubeArray> (); 
+		cA = FindObjectOfType<GridManager> (); 
 		//Assign the 4 blocks of each group 
 		blocks = new Transform[4]; 
 		for (int i = 0; i < transform.childCount; i++) {

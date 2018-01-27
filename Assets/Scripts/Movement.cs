@@ -130,9 +130,9 @@ public class Movement : MonoBehaviour
 		actualGroup.GetComponent<Rotation> ().isActive = true;
 
 		// GameOver
-		// if (!cA.updateArrayBool())
-		// 	SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-		// else
+		if (!cA.updateArrayBool(m_goRight))
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		else
 			cA.checkForFullLine (m_direction);
 	}
 }

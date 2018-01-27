@@ -11,14 +11,14 @@ public class Rotation : MonoBehaviour {
 	Vector3[][] rotation; 
 	public Transform[] blocks; 
 	public string type; 
-	CubeArray cA;
+	GridManager cA;
 
 	public bool goRight;
 
 
 	// Use this for initialization
 	void Awake () { 
-		cA = FindObjectOfType<CubeArray> (); 
+		cA = FindObjectOfType<GridManager> (); 
 		//Assign the 4 blocks of each group 
 		blocks = new Transform[4]; 
 		for (int i = 0; i < transform.childCount; i++) {
@@ -28,20 +28,26 @@ public class Rotation : MonoBehaviour {
 	}
 
 	//Perform rotation to left side
-	public void rotateLeft(bool back){
+	public void rotateLeft(bool back)
+	{
 		rotAngel = getRotAngle (rotAngel + 90); 
-		rotate (rotAngel / 90); 
-		if (!back && !cA.updateArrayBool(goRight)) {
+		rotate (rotAngel / 90);
+
+		if (!back && !cA.updateArrayBool(goRight))
+		{
 			rotateRight (true); 
 			ManageAudio.instance.playCantMove (); 
 		} 
 	}
 
 	//Perform rotation clockwards
-	public void rotateRight(bool back){
+	public void rotateRight(bool back)
+	{
 		rotAngel = getRotAngle (rotAngel - 90); 
 		rotate (rotAngel / 90); 
-		if (!back && !cA.updateArrayBool (goRight)) {
+
+		if (!back && !cA.updateArrayBool (goRight))
+		{
 			rotateLeft (true); 
 			ManageAudio.instance.playCantMove (); 
 		} 

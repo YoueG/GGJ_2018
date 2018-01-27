@@ -32,5 +32,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-Assets/Scenes/testVfxMat.unity.meta
-Assets/Scenes/testVfxMat.unity
+
+/Assets/Scenes/testVfxMat.unity.meta
+/Assets/Scenes/testVfxMat.unity
+/Assets/LOCAL/*.*

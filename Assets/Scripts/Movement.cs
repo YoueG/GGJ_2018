@@ -98,13 +98,13 @@ public class Movement : MonoBehaviour
 		{
 			actualGroup.transform.position += pos; 
 
-			if (!cA.updateArrayBool ())
+			if (!cA.updateArrayBool())
 			{
 				actualGroup.transform.position -= pos; 
 				ManageAudio.instance.playCantMove();
 
 				if(pos == m_direction)
-					spawnNew ();
+					spawnNew();
 			}
 		}
 	}
@@ -114,7 +114,7 @@ public class Movement : MonoBehaviour
 	{
 		actualGroup.GetComponent<Rotation> ().isActive = false; 
 
-		actualGroup = spawnNext ();
+		actualGroup = spawnNext();
 
 		if(m_goRight)
 			actualGroup.GetComponent<Rotation>().rotateLeft (false);
@@ -122,10 +122,11 @@ public class Movement : MonoBehaviour
 			actualGroup.GetComponent<Rotation>().rotateRight (false);
 
 		actualGroup.GetComponent<Rotation> ().isActive = true;
-		
-		if (!cA.updateArrayBool ())
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-		else
-			cA.checkForFullLine ();
+
+		// GameOver
+		// if (!cA.updateArrayBool())
+		// 	SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		// else
+			cA.checkForFullLine (m_direction);
 	}
 }

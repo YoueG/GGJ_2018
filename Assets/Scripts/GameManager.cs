@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-	public GameObject startButton, window, windowPause, pauseBtn;
+	public GameObject window, windowPause, pauseBtn;
 
 	// Use this for initialization
 	void Awake ()

@@ -14,7 +14,7 @@ public class CubeArray : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		isCube = new bool[m_width,m_height];
-		updateArrayBool ();
+		// updateArrayBool ();
 
 		WIDTH = m_width;
 		HEIGHT = m_height;
@@ -29,40 +29,45 @@ public class CubeArray : MonoBehaviour {
 
 	public static Vector3 getRight()
 	{
-		return new Vector3(WIDTH, (HEIGHT/2));
+		return new Vector3(WIDTH - 4, (HEIGHT/2));
 	}
 
 	//Update the cube array and return false if there is any intersection between two cubes
-	public bool updateArrayBool()
+	public bool updateArrayBool(bool goRight, GameObject actualGroup = null)
 	{
 		isCube = new bool[m_width,m_height];
-		bool withoutIntersection = true; 
 
 		foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
 		{
 			int x = (int)cube.transform.position.x;
 			int y = (int)cube.transform.position.y;
 
-			if (x >= 0 && x < MIDDLE && y >= 0 && y < m_height)
+			if((goRight && x <= MIDDLE) || (!goRight && x >= MIDDLE-1))
 			{
-				bool cubeSetted = isCube [x, y];
-
-				if (cubeSetted)
+				if(x >= 0 && x < m_width && y >= 0 && y < m_height)
 				{
-					//Position in array is always setted
-					withoutIntersection = false;
+					// On line
+					if(goRight && x == MIDDLE && actualGroup && cube.transform.parent == actualGroup.transform)
+						return false;
+					else if(!goRight && x == MIDDLE-1 && actualGroup && cube.transform.parent == actualGroup.transform)
+						return false;
+					else
+					{
+						if (isCube [x, y])
+							return false;
+						else
+							isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
+					}
 				}
 				else
-					isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
-			}
-			else
-			{
-				//Position is out of range 
-				withoutIntersection = false; 
+				{
+					//Position is out of range 
+					return false;
+				}
 			}
 		}
 
-		return withoutIntersection; 
+		return true;
 	}
 
 

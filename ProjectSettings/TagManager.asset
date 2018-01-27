@@ -42,3 +42,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: fx
+    uniqueID: 2586575159
+    locked: 0

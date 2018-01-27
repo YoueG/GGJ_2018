@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using XboxCtrlrInput;
 
 public class Movement : MonoBehaviour
 {
+	[SerializeField]
+	XboxController m_controller;
 
 	[SerializeField]
 	bool m_goRight;
@@ -50,19 +53,20 @@ public class Movement : MonoBehaviour
 
 	bool m_canMoove = true;
 	void checkForInput(){
-		if (Input.GetButtonDown("RotR"))
+		if (XCI.GetButtonDown(XboxButton.RightBumper, m_controller))
 			actualGroup.GetComponent<Rotation>().rotateRight (false);
-		else if (Input.GetButtonDown("RotL"))
-			actualGroup.GetComponent<Rotation>().rotateLeft (false); 
+		else if (XCI.GetButtonDown(XboxButton.LeftBumper, m_controller))
+			actualGroup.GetComponent<Rotation>().rotateLeft (false);
+		
 
-		if (Input.GetAxisRaw("Vertical") == 1)
+		if (XCI.GetAxis(XboxAxis.LeftStickY, m_controller) > 0)
 		{
 			if(m_canMoove)
 				move (Vector3.up);
 
 			m_canMoove = false;
 		}
-		else if (Input.GetAxisRaw("Vertical") == -1)
+		else if (XCI.GetAxis(XboxAxis.LeftStickY, m_controller) < 0)
 		{
 			if(m_canMoove)
 				move (Vector3.down);
@@ -72,38 +76,40 @@ public class Movement : MonoBehaviour
 		else
 			m_canMoove = true;
 		
-		if (Input.GetButton("Accel"))
+		if (XCI.GetButton(XboxButton.A, m_controller))
 			timestep = 0.05F; 
 		else
 			timestep = initTimestep;
 
-		cA.updateArrayBool ();
+		// cA.updateArrayBool (m_goRight);
 	}
 
 	[SerializeField]
 	GameObject[] groups; 
 
 	//Spawn the next group
-	GameObject spawnNext(){
+	GameObject spawnNext()
+	{
 		int i = Random.Range(0, groups.Length);
-		return Instantiate(groups[i],
-			m_spawn,
-			Quaternion.identity,
-			cA.transform);
+
+		GameObject next = Instantiate(groups[i], m_spawn, Quaternion.identity, cA.transform);
+		next.GetComponent<Rotation>().goRight = m_goRight;
+
+		return next;
 	}
 
-	void move(Vector3 pos)
+	void move(Vector3 dir)
 	{
 		if (actualGroup != null)
 		{
-			actualGroup.transform.position += pos; 
+			actualGroup.transform.position += dir; 
 
-			if (!cA.updateArrayBool())
+			if (!cA.updateArrayBool(m_goRight, actualGroup))
 			{
-				actualGroup.transform.position -= pos; 
+				actualGroup.transform.position -= dir; 
 				ManageAudio.instance.playCantMove();
 
-				if(pos == m_direction)
+				if(dir == m_direction)
 					spawnNew();
 			}
 		}

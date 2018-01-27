@@ -36,7 +36,7 @@ public class CubeArray : MonoBehaviour {
 	}
 
 	//Update the cube array and return false if there is any intersection between two cubes
-	public bool updateArrayBool(bool goRight, GameObject actualGroup = null)
+	public bool updateArrayBool(bool goRight, Transform actualGroup = null)
 	{
 		isCube = new bool[m_width,m_height];
 
@@ -52,9 +52,9 @@ public class CubeArray : MonoBehaviour {
 				if(x >= 0 && x < m_width && y >= 0 && y < m_height)
 				{
 					// On line
-					if(goRight && x == MIDDLE && actualGroup && cube.transform.parent == actualGroup.transform)
+					if(goRight && x == MIDDLE && actualGroup && cube.transform.parent == actualGroup)
 						notTouching = false;
-					else if(!goRight && x == MIDDLE-1 && actualGroup && cube.transform.parent == actualGroup.transform)
+					else if(!goRight && x == MIDDLE-1 && actualGroup && cube.transform.parent == actualGroup)
 						notTouching = false;
 					else
 					{

@@ -21,7 +21,7 @@ public class Movement : MonoBehaviour
 	Vector3 m_spawn;
 
 	//The actual group which can rotate and will move down
-	public GameObject actualGroup; 
+	public Rotation actualGroup; 
 
 
 	void Start(){
@@ -33,16 +33,17 @@ public class Movement : MonoBehaviour
 	}
 
 	public void startGame(){
-		actualGroup = spawnNext ();
+		actualGroup = spawnNext();
 
 		if(m_goRight)
-			actualGroup.GetComponent<Rotation>().rotateLeft (false);
+			actualGroup.rotateLeft (false);
 		else
-			actualGroup.GetComponent<Rotation>().rotateRight (false);
+			actualGroup.rotateRight (false);
 
 	}
 	//Move down in interval of timestep
-	void Update () {
+	void Update ()
+	{
 		time += Time.deltaTime; 
 		if (time > timestep) {
 			time = 0;
@@ -52,11 +53,12 @@ public class Movement : MonoBehaviour
 	}
 
 	bool m_canMoove = true;
-	void checkForInput(){
+	void checkForInput()
+	{
 		if (XCI.GetButtonDown(XboxButton.RightBumper, m_controller))
-			actualGroup.GetComponent<Rotation>().rotateRight (false);
+			actualGroup.rotateRight (false);
 		else if (XCI.GetButtonDown(XboxButton.LeftBumper, m_controller))
-			actualGroup.GetComponent<Rotation>().rotateLeft (false);
+			actualGroup.rotateLeft (false);
 		
 
 		if (XCI.GetAxis(XboxAxis.LeftStickY, m_controller) > 0)
@@ -88,14 +90,14 @@ public class Movement : MonoBehaviour
 	GameObject[] groups; 
 
 	//Spawn the next group
-	GameObject spawnNext()
+	Rotation spawnNext()
 	{
 		int i = Random.Range(0, groups.Length);
 
 		GameObject next = Instantiate(groups[i], m_spawn, Quaternion.identity, cA.transform);
 		next.GetComponent<Rotation>().goRight = m_goRight;
 
-		return next;
+		return next.GetComponent<Rotation>();
 	}
 
 	void move(Vector3 dir)
@@ -104,7 +106,7 @@ public class Movement : MonoBehaviour
 		{
 			actualGroup.transform.position += dir; 
 
-			if (!cA.updateArrayBool(m_goRight, actualGroup))
+			if (!cA.updateArrayBool(m_goRight, actualGroup.transform))
 			{
 				actualGroup.transform.position -= dir; 
 				ManageAudio.instance.playCantMove();
@@ -123,9 +125,9 @@ public class Movement : MonoBehaviour
 		actualGroup = spawnNext();
 
 		if(m_goRight)
-			actualGroup.GetComponent<Rotation>().rotateLeft (false);
+			actualGroup.rotateLeft (false);
 		else
-			actualGroup.GetComponent<Rotation>().rotateRight (false);
+			actualGroup.rotateRight (false);
 
 		actualGroup.GetComponent<Rotation> ().isActive = true;
 

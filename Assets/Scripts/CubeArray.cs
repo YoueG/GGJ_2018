@@ -66,42 +66,37 @@ public class CubeArray : MonoBehaviour {
 	public void checkForFullLine()
 	{
 		//Check if there is any full line 
-		List<int> isFullLine = new List<int> (); 
-		for (int i = 0; i < m_height; i++) {
+		List<int> isFullLine = new List<int> ();
+
+		for (int x = 0; x < m_width; x++)
+		{
 			bool isFull = true; 
-			for (int j = 0; j < m_width; j++) {
-				if (!isCube [j, i])
-					isFull = false; 	
-			} 
+			for (int y = 0; y < m_height; y++)
+				if (!isCube [x, y])
+					isFull = false;
+
 			if (isFull)
-				isFullLine.Add (i); 
+				isFullLine.Add (x);
 		}
 
 		//For each full line
-		for(int i = 0; i < isFullLine.Count; i++){
-			//Delete all cubes in a row
-			foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube")) {
-				int y = (int)cube.transform.position.y;
-				if(isFullLine[i] == y){
-					//Heres goes a incredible cool explosion effect!!!
-					Destroy (cube); 
-				}
-			}
+		for(int i = 0; i < isFullLine.Count; i++)
+		{
+			//Delete line
+			foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
+				if(isFullLine[i] == (int)cube.transform.position.x)
+					Destroy (cube);
+
 			//Set down all cubes above the deleted row
-			foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube")) {
-				int y = (int)cube.transform.position.y;
-				if(isFullLine[i] < y){
-					cube.transform.position += Vector3.down; 
-				}
-			}
-			ManageAudio.instance.PlayFullLine (); 
+			foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
+				if(isFullLine[i] < cube.transform.position.x)
+					cube.transform.position += Vector3.right;
 
-			for (int j = 0; j < isFullLine.Count; j++) {
+			ManageAudio.instance.PlayFullLine(); 
+
+			for (int j = 0; j < isFullLine.Count; j++)
 				isFullLine [j] -= 1;
-			}
 		}
-			
-
 	}
 
 #if UNITY_EDITOR

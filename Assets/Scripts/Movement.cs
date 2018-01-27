@@ -81,19 +81,21 @@ public class Movement : MonoBehaviour
 		else
 			timestep = initTimestep;
 
-		cA.updateArrayBool (m_goRight);
+		// cA.updateArrayBool (m_goRight);
 	}
 
 	[SerializeField]
 	GameObject[] groups; 
 
 	//Spawn the next group
-	GameObject spawnNext(){
+	GameObject spawnNext()
+	{
 		int i = Random.Range(0, groups.Length);
-		return Instantiate(groups[i],
-			m_spawn,
-			Quaternion.identity,
-			cA.transform);
+
+		GameObject next = Instantiate(groups[i], m_spawn, Quaternion.identity, cA.transform);
+		next.GetComponent<Rotation>().goRight = m_goRight;
+
+		return next;
 	}
 
 	void move(Vector3 dir)
@@ -102,7 +104,7 @@ public class Movement : MonoBehaviour
 		{
 			actualGroup.transform.position += dir; 
 
-			if (!cA.updateArrayBool(m_goRight))
+			if (!cA.updateArrayBool(m_goRight, actualGroup))
 			{
 				actualGroup.transform.position -= dir; 
 				ManageAudio.instance.playCantMove();

@@ -78,7 +78,8 @@ public class CubeArray : MonoBehaviour {
 		return notTouching;
 	}
 
-
+	[SerializeField]
+	float m_shakeAmount;
 	public void checkForFullLine(Vector3 direction)
 	{
 		//Check if there is any full line 
@@ -115,7 +116,8 @@ public class CubeArray : MonoBehaviour {
 				}
 			}
 
-			ManageAudio.instance.PlayFullLine(); 
+			ManageAudio.instance.PlayFullLine();
+			Shake.Value += m_shakeAmount;
 
 			for (int j = 0; j < isFullLine.Count; j++)
 				isFullLine [j] -= 1;

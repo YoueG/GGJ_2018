@@ -29,11 +29,11 @@ public class CubeArray : MonoBehaviour {
 
 	public static Vector3 getRight()
 	{
-		return new Vector3(WIDTH, (HEIGHT/2));
+		return new Vector3(WIDTH - 4, (HEIGHT/2));
 	}
 
 	//Update the cube array and return false if there is any intersection between two cubes
-	public bool updateArrayBool()
+	public bool updateArrayBool(bool? goRight = null)
 	{
 		isCube = new bool[m_width,m_height];
 		bool withoutIntersection = true; 
@@ -43,17 +43,27 @@ public class CubeArray : MonoBehaviour {
 			int x = (int)cube.transform.position.x;
 			int y = (int)cube.transform.position.y;
 
-			if (x >= 0 && x < MIDDLE && y >= 0 && y < m_height)
+			if(x >= 0 && x < m_width && y >= 0 && y < m_height)
 			{
-				bool cubeSetted = isCube [x, y];
-
-				if (cubeSetted)
+				if ((goRight == true && x < MIDDLE)	||
+					(goRight == false && x >= MIDDLE) ||
+					goRight == null)
 				{
-					//Position in array is always setted
-					withoutIntersection = false;
+					bool cubeSetted = isCube [x, y];
+
+					if (cubeSetted)
+					{
+						//Position in array is always setted
+						withoutIntersection = false;
+					}
+					else
+						isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
 				}
 				else
-					isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
+				{
+					//Position is out of range 
+					withoutIntersection = false; 
+				}
 			}
 			else
 			{

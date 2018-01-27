@@ -77,7 +77,7 @@ public class Movement : MonoBehaviour
 		else
 			timestep = initTimestep;
 
-		cA.updateArrayBool ();
+		cA.updateArrayBool (m_goRight);
 	}
 
 	[SerializeField]
@@ -92,18 +92,18 @@ public class Movement : MonoBehaviour
 			cA.transform);
 	}
 
-	void move(Vector3 pos)
+	void move(Vector3 dir)
 	{
 		if (actualGroup != null)
 		{
-			actualGroup.transform.position += pos; 
+			actualGroup.transform.position += dir; 
 
-			if (!cA.updateArrayBool())
+			if (!cA.updateArrayBool(m_goRight))
 			{
-				actualGroup.transform.position -= pos; 
+				actualGroup.transform.position -= dir; 
 				ManageAudio.instance.playCantMove();
 
-				if(pos == m_direction)
+				if(dir == m_direction)
 					spawnNew();
 			}
 		}

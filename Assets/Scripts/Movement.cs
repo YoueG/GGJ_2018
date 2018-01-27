@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class Movement : MonoBehaviour {
+public class Movement : MonoBehaviour
+{
 
 	[SerializeField]
 	bool m_goRight;
@@ -87,7 +88,8 @@ public class Movement : MonoBehaviour {
 		int i = Random.Range(0, groups.Length);
 		return Instantiate(groups[i],
 			m_spawn,
-			Quaternion.identity);
+			Quaternion.identity,
+			cA.transform);
 	}
 
 	void move(Vector3 pos){

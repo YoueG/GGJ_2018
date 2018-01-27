@@ -16,7 +16,7 @@ public class Rotation : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () { 
-		cA = GameObject.Find("Main Camera").GetComponent<CubeArray> (); 
+		cA = FindObjectOfType<CubeArray> (); 
 		//Assign the 4 blocks of each group 
 		blocks = new Transform[4]; 
 		for (int i = 0; i < transform.childCount; i++) {

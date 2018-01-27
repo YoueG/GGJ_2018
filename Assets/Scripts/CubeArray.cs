@@ -63,8 +63,8 @@ public class CubeArray : MonoBehaviour {
 	}
 
 
-	public void checkForFullLine(){
-
+	public void checkForFullLine()
+	{
 		//Check if there is any full line 
 		List<int> isFullLine = new List<int> (); 
 		for (int i = 0; i < m_height; i++) {

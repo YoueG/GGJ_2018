@@ -126,22 +126,17 @@ public class Movement : MonoBehaviour
 
 		actualGroup = preparedPiece;
 		actualGroup.transform.position = m_startPos;
-		foreach (Transform cube in actualGroup.transform)
-			cube.tag = "Cube";
 
 		prepareNext();
-
-		if(m_goRight)
-			actualGroup.rotateLeft (false);
-		else
-			actualGroup.rotateRight (false);
-
-		actualGroup.isActive = true;
 
 		// GameOver
 		if (!cA.updateArrayBool(m_goRight))
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		else
 			cA.checkForFullLine (m_direction);
+
+		actualGroup.isActive = true;
+		foreach (Transform cube in actualGroup.transform)
+			cube.tag = "Cube";
 	}
 }

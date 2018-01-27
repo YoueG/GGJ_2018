@@ -121,6 +121,15 @@ public class PlayerController : MonoBehaviour
 		actualGroup = preparedPiece;
 		actualGroup.transform.position = m_startPos;
 
+		bool needCorrection = true;
+
+		foreach (Transform item in actualGroup.transform)
+			if(item.position.x == (m_goRight ? 0 : 35))
+				needCorrection = false;
+		
+		if(needCorrection)
+			actualGroup.transform.position -= m_direction;
+
 		prepareNext();
 
 		// GameOver

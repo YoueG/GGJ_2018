@@ -17,7 +17,6 @@ public class GridManager : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		isCube = new bool[m_width,m_height];
-		// updateArrayBool ();
 
 		WIDTH = m_width;
 		HEIGHT = m_height;
@@ -32,7 +31,7 @@ public class GridManager : MonoBehaviour {
 
 	public static Vector3 getRight()
 	{
-		return new Vector3(WIDTH - 4, (HEIGHT/2));
+		return new Vector3(WIDTH-1 - 2, (HEIGHT/2));
 	}
 
 	//Update the cube array and return false if there is any intersection between two cubes
@@ -59,13 +58,13 @@ public class GridManager : MonoBehaviour {
 					else
 					{
 						if (isCube [x, y])
-							notTouching = false;
+						{
+							notTouching = false;							
+							Destroy(Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
+						}
 						else
 							isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
 					}
-
-					if(!notTouching)
-						Destroy(Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
 				}
 				else
 				{

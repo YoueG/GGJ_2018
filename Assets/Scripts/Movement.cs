@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class Movement : MonoBehaviour {
+public class Movement : MonoBehaviour
+{
 
 	[SerializeField]
 	bool m_goRight;
@@ -87,38 +88,45 @@ public class Movement : MonoBehaviour {
 		int i = Random.Range(0, groups.Length);
 		return Instantiate(groups[i],
 			m_spawn,
-			Quaternion.identity);
+			Quaternion.identity,
+			cA.transform);
 	}
 
-	void move(Vector3 pos){
-		if (actualGroup != null) {
+	void move(Vector3 pos)
+	{
+		if (actualGroup != null)
+		{
 			actualGroup.transform.position += pos; 
-			if (!cA.updateArrayBool ()) {
+
+			if (!cA.updateArrayBool())
+			{
 				actualGroup.transform.position -= pos; 
-				ManageAudio.instance.playCantMove (); 
-				if(pos == m_direction){
-					spawnNew (); 
-				}
+				ManageAudio.instance.playCantMove();
+
+				if(pos == m_direction)
+					spawnNew();
 			}
 		}
 	}
 
 	//Handle spawning a new group and check if there is any intersection after spawning
-	private void spawnNew(){
+	private void spawnNew()
+	{
 		actualGroup.GetComponent<Rotation> ().isActive = false; 
 
-		actualGroup = spawnNext ();
+		actualGroup = spawnNext();
+
 		if(m_goRight)
 			actualGroup.GetComponent<Rotation>().rotateLeft (false);
 		else
 			actualGroup.GetComponent<Rotation>().rotateRight (false);
 
 		actualGroup.GetComponent<Rotation> ().isActive = true;
-		if (!cA.updateArrayBool ()) {
-			//Theres a better way, but for now - keep it simple :) 
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-		} else {
-			cA.checkForFullLine ();
-		} 
+
+		// GameOver
+		// if (!cA.updateArrayBool())
+		// 	SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		// else
+			cA.checkForFullLine (m_direction);
 	}
 }

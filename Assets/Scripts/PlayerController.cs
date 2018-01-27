@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using XboxCtrlrInput;
 
-public class Movement : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
 	[SerializeField]
 	XboxController m_controller;
@@ -13,11 +13,11 @@ public class Movement : MonoBehaviour
 	bool m_goRight;
 	Vector3 m_direction;
 
-	public float initTimestep = 0.2F;
+	float initTimestep = 0.5F;
 	float timestep; 
 	float time; 
 
-	CubeArray cA; 
+	GridManager m_gridManager; 
 	Vector3 m_startPos;
 	[SerializeField]
 	Transform m_InitPos;
@@ -27,13 +27,16 @@ public class Movement : MonoBehaviour
 
 	Rotation preparedPiece;
 
+	float m_verticalMovementDelay = .2f;
+	float m_nextMoveTime;
+
 
 	void Start(){
-		cA = FindObjectOfType<CubeArray>(); 
+		m_gridManager = FindObjectOfType<GridManager>(); 
 		timestep = initTimestep;
 
 		m_direction = m_goRight ? Vector3.right : Vector3.left;
-		m_startPos = m_goRight ? CubeArray.getLeft() : CubeArray.getRight();
+		m_startPos = m_goRight ? GridManager.getLeft() : GridManager.getRight();
 	}
 
 	public void startGame()
@@ -45,45 +48,36 @@ public class Movement : MonoBehaviour
 	void Update ()
 	{
 		time += Time.deltaTime; 
-		if (time > timestep) {
+		if (time > timestep)
+		{
 			time = 0;
-			move (m_direction); 
+			move(m_direction); 
 		}
-		checkForInput (); 
-	}
-
-	bool m_canMoove = true;
-	void checkForInput()
-	{
+		
 		if (XCI.GetButtonDown(XboxButton.RightBumper, m_controller))
 			actualGroup.rotateRight (false);
 		else if (XCI.GetButtonDown(XboxButton.LeftBumper, m_controller))
 			actualGroup.rotateLeft (false);
-		
 
-		if (XCI.GetAxis(XboxAxis.LeftStickY, m_controller) > 0)
+		if(XCI.GetAxis(XboxAxis.LeftStickY, m_controller) != 0)
 		{
-			if(m_canMoove)
-				move (Vector3.up);
+			if(m_nextMoveTime < Time.time)
+			{
+				if (XCI.GetAxis(XboxAxis.LeftStickY, m_controller) > 0)
+					move(Vector3.up);
+				else
+					move(Vector3.down);
 
-			m_canMoove = false;
-		}
-		else if (XCI.GetAxis(XboxAxis.LeftStickY, m_controller) < 0)
-		{
-			if(m_canMoove)
-				move (Vector3.down);
-
-			m_canMoove = false;
+				m_nextMoveTime = Time.time + m_verticalMovementDelay;
+			}
 		}
 		else
-			m_canMoove = true;
+			m_nextMoveTime = 0;
 		
 		if (XCI.GetButton(XboxButton.A, m_controller))
 			timestep = 0.05F; 
 		else
 			timestep = initTimestep;
-
-		// cA.updateArrayBool (m_goRight);
 	}
 
 	[SerializeField]
@@ -95,7 +89,7 @@ public class Movement : MonoBehaviour
 		{
 			actualGroup.transform.position += dir; 
 
-			if (!cA.updateArrayBool(m_goRight, actualGroup.transform))
+			if (!m_gridManager.updateArrayBool(m_goRight, actualGroup.transform))
 			{
 				actualGroup.transform.position -= dir; 
 				ManageAudio.instance.playCantMove();
@@ -108,7 +102,7 @@ public class Movement : MonoBehaviour
 
 	void prepareNext()
 	{
-		preparedPiece = Instantiate(groups[Random.Range(0, groups.Length)], m_InitPos.position, Quaternion.identity, cA.transform).GetComponent<Rotation>();
+		preparedPiece = Instantiate(groups[Random.Range(0, groups.Length)], m_InitPos.position, Quaternion.identity, m_gridManager.transform).GetComponent<Rotation>();
 		preparedPiece.goRight = m_goRight;
 		preparedPiece.GetComponent<Animation>().enabled = true;
 
@@ -127,13 +121,22 @@ public class Movement : MonoBehaviour
 		actualGroup = preparedPiece;
 		actualGroup.transform.position = m_startPos;
 
+		bool needCorrection = true;
+
+		foreach (Transform item in actualGroup.transform)
+			if(item.position.x == (m_goRight ? 0 : 35))
+				needCorrection = false;
+		
+		if(needCorrection)
+			actualGroup.transform.position -= m_direction;
+
 		prepareNext();
 
 		// GameOver
-		if (!cA.updateArrayBool(m_goRight))
+		if (!m_gridManager.updateArrayBool(m_goRight))
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		else
-			cA.checkForFullLine (m_direction);
+			m_gridManager.checkForFullLine (m_direction);
 
 		actualGroup.isActive = true;
 		foreach (Transform cube in actualGroup.transform)

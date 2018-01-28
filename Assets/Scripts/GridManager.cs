@@ -52,13 +52,18 @@ public class GridManager : MonoBehaviour {
 			for (int i = 0; i < pieceNb; i++)
 			{
 				int y = (int)actualGroup.GetChild(i).position.y;
+				int x = (int)actualGroup.GetChild(i).position.x;
 
-				temp[i] = new Vector3((int)actualGroup.GetChild(i).position.x, y);
+				temp[i] = new Vector3(x, y);
 
 				if(y < 0)
 					decal = Vector3.up;
 				else if (y >= m_height)
 					decal = Vector3.down;
+				else if(x < 0)
+					decal = Vector3.right;
+				else if (x >= m_width)
+					decal = Vector3.left;
 			}
 			
 			actualGroup.position += decal;
@@ -81,8 +86,6 @@ public class GridManager : MonoBehaviour {
 				else if(isCube[(int)temp[i].x, (int)temp[i].y])
 				{
 					ManageAudio.instance.blocsCollide();
-
-					print((int)temp[i].x);
 
 					if((int)temp[i].x <= 1 || (int)temp[i].x >= m_width-2)
 					{

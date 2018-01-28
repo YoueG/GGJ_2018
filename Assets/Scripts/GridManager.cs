@@ -78,10 +78,16 @@ public class GridManager : MonoBehaviour {
 					
 			for (int i = 0; i < pieceNb; i++)
 			{
-				if((int)temp[i].x <= 0 || (int)temp[i].x >= m_width-1)
+				if(goRight && (int)temp[i].x >= m_width-1)
 				{
-					m_gameManager.Victory(goRight);
+					m_gameManager.Victory(true);
 					return false;			
+				}
+				else if(!goRight && (int)temp[i].x <= 0)
+				{
+					m_gameManager.Victory(false);
+					return false;	
+
 				}
 				else if(isCube[(int)temp[i].x, (int)temp[i].y])
 				{

@@ -2590,6 +2590,11 @@ Prefab:
       propertyPath: randomSeed
       value: -1666165165
       objectReference: {fileID: 0}
+    - target: {fileID: 198049197354611792, guid: a970965305074984cb862b03ec9b1c97,
+        type: 2}
+      propertyPath: prewarm
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a970965305074984cb862b03ec9b1c97, type: 2}
   m_IsPrefabParent: 0

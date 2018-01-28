@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
 		prepareNext();
 		Invoke("spawnNew",1);
 	}
+
 	//Move down in interval of timestep
 	void Update ()
 	{

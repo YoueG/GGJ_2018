@@ -22,6 +22,8 @@ public class GridManager : MonoBehaviour {
 		HEIGHT = m_height;
 
 		MIDDLE = m_width/2;
+
+		m_gameManager = FindObjectOfType<GameManager>();
 	}
 
 	public static Vector3 getLeft()
@@ -34,6 +36,7 @@ public class GridManager : MonoBehaviour {
 		return new Vector3(WIDTH-1 - 2, (HEIGHT/2));
 	}
 
+	GameManager m_gameManager;
 	//Update the cube array and return false if there is any intersection between two cubes
 	public bool updateArrayBool(bool goRight, Transform actualGroup = null)
 	{
@@ -68,10 +71,15 @@ public class GridManager : MonoBehaviour {
 
 			for (int i = 0; i < pieceNb; i++)
 			{
-				if(isCube[(int)temp[i].x, (int)temp[i].y])
+				if((int)temp[i].x < 0 || (int)temp[i].x >= m_width)
+				{
+					m_gameManager.Victory(goRight);
+					return false;			
+				}
+				else if(isCube[(int)temp[i].x, (int)temp[i].y])
 				{
 					Destroy(Instantiate(m_particles, actualGroup.GetChild(i).position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
-					return false;					
+					return false;
 				}
 				
 				isCube[(int)temp[i].x, (int)temp[i].y] = true;

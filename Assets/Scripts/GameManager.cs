@@ -7,6 +7,9 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
 	public GameObject window, windowPause, pauseBtn;
 
+	[SerializeField]
+	GameObject victoryCapital, victoryCommunism;
+
 	// Use this for initialization
 	void Awake ()
 	{
@@ -20,6 +23,20 @@ public class GameManager : MonoBehaviour {
 		foreach (var mov in FindObjectsOfType<PlayerController>())
 		{
 			mov.startGame();
+		}
+	}
+
+	public void Victory(bool goRight)
+	{
+		if(goRight)
+			victoryCapital.active = true;
+		else
+			victoryCommunism.active = true;
+			
+
+		foreach (var mov in FindObjectsOfType<PlayerController>())
+		{
+			mov.enabled = false;
 		}
 	}
 

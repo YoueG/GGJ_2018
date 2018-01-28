@@ -28,12 +28,13 @@ public class Rotation : MonoBehaviour {
 	}
 
 	//Perform rotation to left side
-	public void rotateLeft(bool back)
+	public void rotateLeft(bool back, bool updatePos)
 	{
 		rotAngel = getRotAngle (rotAngel + 90); 
 		rotate (rotAngel / 90);
 
-		cA.updateArrayBool(goRight);
+		if(updatePos)
+			cA.updateArrayBool(goRight, transform);
 
 		// if (!back)
 		// {
@@ -43,12 +44,13 @@ public class Rotation : MonoBehaviour {
 	}
 
 	//Perform rotation clockwards
-	public void rotateRight(bool back)
+	public void rotateRight(bool back, bool updatePos)
 	{
 		rotAngel = getRotAngle (rotAngel - 90); 
 		rotate (rotAngel / 90);
 
-		cA.updateArrayBool (goRight);
+		if(updatePos)
+			cA.updateArrayBool (goRight, transform);
 
 		// if (!back)
 		// {

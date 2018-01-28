@@ -39,7 +39,6 @@ public class GridManager : MonoBehaviour {
 	{
 		if(actualGroup)
 		{
-			isCube = new bool[m_width,m_height];
 			int pieceNb = actualGroup.childCount;
 
 			Vector3[] temp = new Vector3[pieceNb];
@@ -60,6 +59,8 @@ public class GridManager : MonoBehaviour {
 			actualGroup.position += decal;
 			for (int i = 0; i < pieceNb; i++)
 				temp[i] += decal;
+
+			isCube = new bool[m_width,m_height];
 
 			foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
 				if(cube.transform.parent != actualGroup)
@@ -135,6 +136,7 @@ public class GridManager : MonoBehaviour {
         Gizmos.DrawWireCube(new Vector3(MIDDLE - MIDDLE/2, m_height/2, 1) - Vector3.one/2, new Vector3(MIDDLE, m_height, 1));
 		Gizmos.DrawWireCube(new Vector3(MIDDLE + MIDDLE/2, m_height/2, 1) - Vector3.one/2, new Vector3(MIDDLE, m_height, 1));
 
+		// DEBUG
 		// for (int x = 0; x < m_width; x++)
 		// 	for (int y = 0; y < m_height; y++)
 		// 		if(isCube[x, y])
@@ -142,22 +144,3 @@ public class GridManager : MonoBehaviour {
     }
 #endif
 }
-
-/*
- * 	//Only for debug purposes 
-private void printArray(){
-	int rowLength = isCube.GetLength(0);
-	int colLength = isCube.GetLength(1);
-
-	for (int i = 0; i < rowLength; i++)
-	{
-		string line = ""; 
-		for (int j = 0; j < colLength; j++)
-		{
-			line += isCube [i, j].ToString (); 
-		}
-		print (line); 
-	}
-	Console.ReadLine();
-}
-*/

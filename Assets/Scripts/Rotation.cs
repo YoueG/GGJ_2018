@@ -24,7 +24,7 @@ public class Rotation : MonoBehaviour {
 		for (int i = 0; i < transform.childCount; i++) {
 			blocks [i] = transform.GetChild (i); 
 		}
-		getRotByType (type); 
+		getRotByType (type);
 	}
 
 	//Perform rotation to left side
@@ -32,6 +32,7 @@ public class Rotation : MonoBehaviour {
 	{
 		rotAngel = getRotAngle (rotAngel + 90); 
 		rotate (rotAngel / 90);
+		ManageAudio.instance.playTurn();
 
 		if(updatePos)
 			cA.updateArrayBool(goRight, transform);
@@ -48,6 +49,7 @@ public class Rotation : MonoBehaviour {
 	{
 		rotAngel = getRotAngle (rotAngel - 90); 
 		rotate (rotAngel / 90);
+		ManageAudio.instance.playTurn();
 
 		if(updatePos)
 			cA.updateArrayBool (goRight, transform);

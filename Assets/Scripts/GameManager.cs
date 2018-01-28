@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour {
-	public GameObject window, windowPause, pauseBtn;
+	public GameObject window, windowPause, pauseBtn, windowRestart;
 
 	[SerializeField]
 	GameObject victoryCapital, victoryCommunism;
@@ -18,7 +19,10 @@ public class GameManager : MonoBehaviour {
 
 	public void OnClickStart(){
 		Time.timeScale = 1; 
-		window.SetActive (false); 
+		window.SetActive (false);
+
+		ManageAudio.instance.PlayValidate();
+		ManageAudio.instance.PlayMusic(0);
 
 		foreach (var mov in FindObjectsOfType<PlayerController>())
 		{
@@ -32,7 +36,10 @@ public class GameManager : MonoBehaviour {
 			victoryCapital.active = true;
 		else
 			victoryCommunism.active = true;
-			
+
+		ManageAudio.instance.PlayMusic(1);
+		windowRestart.SetActive (true);
+		FindObjectOfType<EventSystem>().SetSelectedGameObject(windowRestart.GetComponentInChildren<Button>().gameObject);
 
 		foreach (var mov in FindObjectsOfType<PlayerController>())
 		{
@@ -45,8 +52,20 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void OnClickRestart(){
-		windowPause.SetActive (false); 
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		windowRestart.SetActive (false);
+		victoryCapital.active = false;
+		victoryCommunism.active = false;
+
+		foreach (Transform child in FindObjectOfType<GridManager>().transform)
+			Destroy(child.gameObject);
+		
+		foreach (var mov in FindObjectsOfType<PlayerController>())
+		{
+			mov.startGame();
+			mov.enabled = true;
+		}
+
+		ManageAudio.instance.PlayMusic(0);
 	}
 
 	public void OnClickPause(){

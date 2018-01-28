@@ -131,6 +131,10 @@ public class PlayerController : MonoBehaviour
 		if(needCorrection)
 			actualGroup.transform.position -= m_direction;
 
+		if(m_goRight && actualGroup.type == "I")
+			actualGroup.transform.position += Vector3.left;
+
+
 		prepareNext();
 
 		// GameOver

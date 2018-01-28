@@ -12,7 +12,7 @@ public class GridManager : MonoBehaviour {
 	static int WIDTH, HEIGHT, MIDDLE;
 
 	[SerializeField]
-	GameObject m_particles;
+	GameObject m_particles, m_lineEffect;
 
 	// Use this for initialization
 	void Awake () {
@@ -40,6 +40,8 @@ public class GridManager : MonoBehaviour {
 	//Update the cube array and return false if there is any intersection between two cubes
 	public bool updateArrayBool(bool goRight, Transform actualGroup = null)
 	{
+		bool result = true;
+
 		if(actualGroup)
 		{
 			int pieceNb = actualGroup.childCount;
@@ -50,13 +52,18 @@ public class GridManager : MonoBehaviour {
 			for (int i = 0; i < pieceNb; i++)
 			{
 				int y = (int)actualGroup.GetChild(i).position.y;
+				int x = (int)actualGroup.GetChild(i).position.x;
 
-				temp[i] = new Vector3((int)actualGroup.GetChild(i).position.x, y);
+				temp[i] = new Vector3(x, y);
 
 				if(y < 0)
 					decal = Vector3.up;
 				else if (y >= m_height)
 					decal = Vector3.down;
+				else if(x < 0)
+					decal = Vector3.right;
+				else if (x >= m_width)
+					decal = Vector3.left;
 			}
 			
 			actualGroup.position += decal;
@@ -68,7 +75,7 @@ public class GridManager : MonoBehaviour {
 			foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
 				if(cube.transform.parent != actualGroup)
 					isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
-
+					
 			for (int i = 0; i < pieceNb; i++)
 			{
 				if((int)temp[i].x < 0 || (int)temp[i].x >= m_width)
@@ -78,15 +85,23 @@ public class GridManager : MonoBehaviour {
 				}
 				else if(isCube[(int)temp[i].x, (int)temp[i].y])
 				{
+					ManageAudio.instance.blocsCollide();
+
+					if((int)temp[i].x <= 1 || (int)temp[i].x >= m_width-2)
+					{
+						m_gameManager.Victory(goRight);
+						return false;
+					}
+
 					Destroy(Instantiate(m_particles, actualGroup.GetChild(i).position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
-					return false;
+					result = false;
 				}
 				
 				isCube[(int)temp[i].x, (int)temp[i].y] = true;
 			}
 		}
 		
-		return true;
+		return result;
 	}
 
 	[SerializeField]
@@ -118,7 +133,9 @@ public class GridManager : MonoBehaviour {
 			{
 				//Delete line
 				if(isFullLine[i] == (int)cube.transform.position.x)
+				{
 					Destroy (cube);
+				}
 				//Displace
 				else
 				{
@@ -129,6 +146,7 @@ public class GridManager : MonoBehaviour {
 				}
 			}
 
+			Destroy(Instantiate(m_lineEffect, Vector3.right * isFullLine[i], Quaternion.identity), 1);
 			ManageAudio.instance.PlayFullLine();
 			Shake.Value += m_shakeAmount;
 

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using XboxCtrlrInput;
 
 public class GameManager : MonoBehaviour {
 	public GameObject window, windowPause, pauseBtn, windowRestart;
@@ -15,6 +16,12 @@ public class GameManager : MonoBehaviour {
 	void Awake ()
 	{
 		Time.timeScale = 0; 
+	}
+
+	void Update()
+	{
+		if(Input.GetKeyDown(KeyCode.Escape) && XCI.GetButtonDown(XboxButton.Start))
+			Application.Quit();
 	}
 
 	public void OnClickStart(){

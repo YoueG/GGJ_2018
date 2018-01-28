@@ -37,10 +37,9 @@ public class GridManager : MonoBehaviour {
 	//Update the cube array and return false if there is any intersection between two cubes
 	public bool updateArrayBool(bool goRight, Transform actualGroup = null)
 	{
-		isCube = new bool[m_width,m_height];
-
 		if(actualGroup)
 		{
+			isCube = new bool[m_width,m_height];
 			int pieceNb = actualGroup.childCount;
 
 			Vector3[] temp = new Vector3[pieceNb];
@@ -67,11 +66,15 @@ public class GridManager : MonoBehaviour {
 					isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
 
 			for (int i = 0; i < pieceNb; i++)
+			{
 				if(isCube[(int)temp[i].x, (int)temp[i].y])
 				{
 					Destroy(Instantiate(m_particles, actualGroup.GetChild(i).position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
 					return false;					
 				}
+				
+				isCube[(int)temp[i].x, (int)temp[i].y] = true;
+			}
 		}
 		
 		return true;
@@ -88,8 +91,10 @@ public class GridManager : MonoBehaviour {
 		{
 			bool isFull = true; 
 			for (int y = 0; y < m_height; y++)
+			{
 				if (!isCube [x, y])
 					isFull = false;
+			}
 
 			if (isFull)
 				isFullLine.Add (x);
@@ -129,6 +134,11 @@ public class GridManager : MonoBehaviour {
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(new Vector3(MIDDLE - MIDDLE/2, m_height/2, 1) - Vector3.one/2, new Vector3(MIDDLE, m_height, 1));
 		Gizmos.DrawWireCube(new Vector3(MIDDLE + MIDDLE/2, m_height/2, 1) - Vector3.one/2, new Vector3(MIDDLE, m_height, 1));
+
+		// for (int x = 0; x < m_width; x++)
+		// 	for (int y = 0; y < m_height; y++)
+		// 		if(isCube[x, y])
+		// 			Gizmos.DrawCube(new Vector3(x, y), Vector3.one);
     }
 #endif
 }

@@ -32,6 +32,7 @@ public class Rotation : MonoBehaviour {
 	{
 		rotAngel = getRotAngle (rotAngel + 90); 
 		rotate (rotAngel / 90);
+		ManageAudio.instance.playMove();
 
 		if(updatePos)
 			cA.updateArrayBool(goRight, transform);
@@ -48,6 +49,7 @@ public class Rotation : MonoBehaviour {
 	{
 		rotAngel = getRotAngle (rotAngel - 90); 
 		rotate (rotAngel / 90);
+		ManageAudio.instance.playMove();
 
 		if(updatePos)
 			cA.updateArrayBool (goRight, transform);

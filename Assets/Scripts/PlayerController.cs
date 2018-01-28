@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour
 					move(Vector3.down);
 
 				m_nextMoveTime = Time.time + m_verticalMovementDelay;
+				ManageAudio.instance.playMove();
 			}
 		}
 		else

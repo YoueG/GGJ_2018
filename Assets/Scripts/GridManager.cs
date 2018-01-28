@@ -12,7 +12,7 @@ public class GridManager : MonoBehaviour {
 	static int WIDTH, HEIGHT, MIDDLE;
 
 	[SerializeField]
-	GameObject m_particles;
+	GameObject m_particles, m_lineEffect;
 
 	// Use this for initialization
 	void Awake () {
@@ -78,6 +78,7 @@ public class GridManager : MonoBehaviour {
 				}
 				else if(isCube[(int)temp[i].x, (int)temp[i].y])
 				{
+					ManageAudio.instance.blocsCollide();
 					Destroy(Instantiate(m_particles, actualGroup.GetChild(i).position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
 					return false;
 				}
@@ -118,7 +119,9 @@ public class GridManager : MonoBehaviour {
 			{
 				//Delete line
 				if(isFullLine[i] == (int)cube.transform.position.x)
+				{
 					Destroy (cube);
+				}
 				//Displace
 				else
 				{
@@ -129,6 +132,7 @@ public class GridManager : MonoBehaviour {
 				}
 			}
 
+			Destroy(Instantiate(m_lineEffect, Vector3.right * isFullLine[i], Quaternion.identity), 1);
 			ManageAudio.instance.PlayFullLine();
 			Shake.Value += m_shakeAmount;
 

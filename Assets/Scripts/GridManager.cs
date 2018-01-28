@@ -78,7 +78,7 @@ public class GridManager : MonoBehaviour {
 					
 			for (int i = 0; i < pieceNb; i++)
 			{
-				if((int)temp[i].x < 0 || (int)temp[i].x >= m_width)
+				if((int)temp[i].x <= 0 || (int)temp[i].x >= m_width-1)
 				{
 					m_gameManager.Victory(goRight);
 					return false;			
@@ -89,7 +89,7 @@ public class GridManager : MonoBehaviour {
 
 					if((int)temp[i].x <= 1 || (int)temp[i].x >= m_width-2)
 					{
-						m_gameManager.Victory(goRight);
+						m_gameManager.Victory(!goRight);
 						return false;
 					}
 

@@ -40,11 +40,17 @@ public class GameManager : MonoBehaviour {
 	public void Victory(bool goRight)
 	{
 		if(goRight)
+		{
+			ManageAudio.instance.PlayMusic(3);
 			victoryCapital.active = true;
+		}
+			
 		else
+		{
+			ManageAudio.instance.PlayMusic(2);
 			victoryCommunism.active = true;
+		}
 
-		ManageAudio.instance.PlayMusic(1);
 		windowRestart.SetActive (true);
 		FindObjectOfType<EventSystem>().SetSelectedGameObject(windowRestart.GetComponentInChildren<Button>().gameObject);
 

@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 1; 
 		window.SetActive (false);
 
-		ManageAudio.instance.PlayValidate();
 		ManageAudio.instance.PlayMusic(0);
 
 		foreach (var mov in FindObjectsOfType<PlayerController>())

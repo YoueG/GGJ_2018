@@ -53,27 +53,31 @@ public class PlayerController : MonoBehaviour
 		{
 			time = 0;
 			move(m_direction); 
+			firstMove = true;
 		}
 		
-		if (XCI.GetButtonDown(XboxButton.RightBumper, m_controller))
-			actualGroup.rotateRight (false, true);
-		else if (XCI.GetButtonDown(XboxButton.LeftBumper, m_controller))
-			actualGroup.rotateLeft (false, true);
-
-		if(XCI.GetAxis(XboxAxis.LeftStickY, m_controller) != 0)
+		if(firstMove)
 		{
-			if(m_nextMoveTime < Time.time)
-			{
-				if (XCI.GetAxis(XboxAxis.LeftStickY, m_controller) > 0)
-					move(Vector3.up);
-				else
-					move(Vector3.down);
+			if (XCI.GetButtonDown(XboxButton.RightBumper, m_controller))
+				actualGroup.rotateRight (false, true);
+			else if (XCI.GetButtonDown(XboxButton.LeftBumper, m_controller))
+				actualGroup.rotateLeft (false, true);
 
-				m_nextMoveTime = Time.time + m_verticalMovementDelay;
+			if(XCI.GetAxis(XboxAxis.LeftStickY, m_controller) != 0)
+			{
+				if(m_nextMoveTime < Time.time)
+				{
+					if (XCI.GetAxis(XboxAxis.LeftStickY, m_controller) > 0)
+						move(Vector3.up);
+					else
+						move(Vector3.down);
+
+					m_nextMoveTime = Time.time + m_verticalMovementDelay;
+				}
 			}
+			else
+				m_nextMoveTime = 0;
 		}
-		else
-			m_nextMoveTime = 0;
 		
 		if (XCI.GetButton(XboxButton.A, m_controller))
 			timestep = 0.1F; 
@@ -84,6 +88,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	GameObject[] groups;
 
+	bool firstMove = false;
 	void move(Vector3 dir)
 	{
 		if (actualGroup != null)
@@ -122,6 +127,7 @@ public class PlayerController : MonoBehaviour
 		actualGroup = preparedPiece;
 		actualGroup.transform.localScale = Vector3.one;
 		actualGroup.transform.position = m_startPos;
+		firstMove = false;
 
 		bool needCorrection = true;
 

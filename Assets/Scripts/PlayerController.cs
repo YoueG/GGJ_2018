@@ -120,6 +120,7 @@ public class PlayerController : MonoBehaviour
 			actualGroup.isActive = false; 
 
 		actualGroup = preparedPiece;
+		actualGroup.transform.localScale = Vector3.one;
 		actualGroup.transform.position = m_startPos;
 
 		bool needCorrection = true;

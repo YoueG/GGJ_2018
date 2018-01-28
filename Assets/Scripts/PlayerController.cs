@@ -55,9 +55,9 @@ public class PlayerController : MonoBehaviour
 		}
 		
 		if (XCI.GetButtonDown(XboxButton.RightBumper, m_controller))
-			actualGroup.rotateRight (false);
+			actualGroup.rotateRight (false, true);
 		else if (XCI.GetButtonDown(XboxButton.LeftBumper, m_controller))
-			actualGroup.rotateLeft (false);
+			actualGroup.rotateLeft (false, true);
 
 		if(XCI.GetAxis(XboxAxis.LeftStickY, m_controller) != 0)
 		{
@@ -107,9 +107,9 @@ public class PlayerController : MonoBehaviour
 		preparedPiece.GetComponent<Animation>().enabled = true;
 
 		if(m_goRight)
-			preparedPiece.rotateLeft(false);
+			preparedPiece.rotateLeft(false, false);
 		else
-			preparedPiece.rotateRight(false);
+			preparedPiece.rotateRight(false, false);
 	}
 
 	//Handle spawning a new group and check if there is any intersection after spawning

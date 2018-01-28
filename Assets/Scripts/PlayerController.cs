@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
 			m_nextMoveTime = 0;
 		
 		if (XCI.GetButton(XboxButton.A, m_controller))
-			timestep = 0.05F; 
+			timestep = 0.15F; 
 		else
 			timestep = initTimestep;
 	}

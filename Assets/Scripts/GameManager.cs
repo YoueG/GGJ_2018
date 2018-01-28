@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using XboxCtrlrInput;
 
 public class GameManager : MonoBehaviour {
-	public GameObject window, windowPause, pauseBtn, windowRestart;
+	public GameObject window, windowPause, pauseBtn, windowRestart, credit;
 
 	[SerializeField]
 	GameObject victoryCapital, victoryCommunism;

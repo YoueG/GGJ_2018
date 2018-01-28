@@ -37,39 +37,48 @@ public class GridManager : MonoBehaviour {
 	//Update the cube array and return false if there is any intersection between two cubes
 	public bool updateArrayBool(bool goRight, Transform actualGroup = null)
 	{
-		isCube = new bool[m_width,m_height];
-
-		foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
-			if(cube.transform.parent != actualGroup)
-				isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
-
-		bool notTouching = true;
-
-		foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
+		if(actualGroup)
 		{
-			if(cube.transform.parent == actualGroup)
-			{
-				int x = (int)cube.transform.position.x;
-				int y = (int)cube.transform.position.y;
+			int pieceNb = actualGroup.childCount;
 
-				if(x*y <= isCube.Length && y >= 0 && y < m_height)
-				{
-					if (isCube[x, y])
-					{
-						notTouching = false;
-						Destroy(Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
-					}
-				}
-				else
-				{
-					//Position is out of range 
-					notTouching = false;
-				}
+			Vector3[] temp = new Vector3[pieceNb];
+			Vector3 decal = Vector3.zero;
+
+			for (int i = 0; i < pieceNb; i++)
+			{
+				int y = (int)actualGroup.GetChild(i).position.y;
+
+				temp[i] = new Vector3((int)actualGroup.GetChild(i).position.x, y);
+
+				if(y < 0)
+					decal = Vector3.up;
+				else if (y >= m_height)
+					decal = Vector3.down;
 			}
 			
-		}
+			actualGroup.position += decal;
+			for (int i = 0; i < pieceNb; i++)
+				temp[i] += decal;
 
-		return notTouching;
+			isCube = new bool[m_width,m_height];
+
+			foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
+				if(cube.transform.parent != actualGroup)
+					isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
+
+			for (int i = 0; i < pieceNb; i++)
+			{
+				if(isCube[(int)temp[i].x, (int)temp[i].y])
+				{
+					Destroy(Instantiate(m_particles, actualGroup.GetChild(i).position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
+					return false;					
+				}
+				
+				isCube[(int)temp[i].x, (int)temp[i].y] = true;
+			}
+		}
+		
+		return true;
 	}
 
 	[SerializeField]
@@ -83,8 +92,10 @@ public class GridManager : MonoBehaviour {
 		{
 			bool isFull = true; 
 			for (int y = 0; y < m_height; y++)
+			{
 				if (!isCube [x, y])
 					isFull = false;
+			}
 
 			if (isFull)
 				isFullLine.Add (x);
@@ -124,25 +135,12 @@ public class GridManager : MonoBehaviour {
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(new Vector3(MIDDLE - MIDDLE/2, m_height/2, 1) - Vector3.one/2, new Vector3(MIDDLE, m_height, 1));
 		Gizmos.DrawWireCube(new Vector3(MIDDLE + MIDDLE/2, m_height/2, 1) - Vector3.one/2, new Vector3(MIDDLE, m_height, 1));
+
+		// DEBUG
+		// for (int x = 0; x < m_width; x++)
+		// 	for (int y = 0; y < m_height; y++)
+		// 		if(isCube[x, y])
+		// 			Gizmos.DrawCube(new Vector3(x, y), Vector3.one);
     }
 #endif
 }
-
-/*
- * 	//Only for debug purposes 
-private void printArray(){
-	int rowLength = isCube.GetLength(0);
-	int colLength = isCube.GetLength(1);
-
-	for (int i = 0; i < rowLength; i++)
-	{
-		string line = ""; 
-		for (int j = 0; j < colLength; j++)
-		{
-			line += isCube [i, j].ToString (); 
-		}
-		print (line); 
-	}
-	Console.ReadLine();
-}
-*/

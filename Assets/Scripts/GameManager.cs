@@ -18,7 +18,10 @@ public class GameManager : MonoBehaviour {
 
 	public void OnClickStart(){
 		Time.timeScale = 1; 
-		window.SetActive (false); 
+		window.SetActive (false);
+
+		ManageAudio.instance.PlayValidate();
+		ManageAudio.instance.PlayMusic(0);
 
 		foreach (var mov in FindObjectsOfType<PlayerController>())
 		{
@@ -32,6 +35,8 @@ public class GameManager : MonoBehaviour {
 			victoryCapital.active = true;
 		else
 			victoryCommunism.active = true;
+
+		ManageAudio.instance.PlayMusic(1);
 			
 
 		foreach (var mov in FindObjectsOfType<PlayerController>())

@@ -33,24 +33,28 @@ public class Rotation : MonoBehaviour {
 		rotAngel = getRotAngle (rotAngel + 90); 
 		rotate (rotAngel / 90);
 
-		if (!back && !cA.updateArrayBool(goRight))
-		{
-			rotateRight (true); 
-			ManageAudio.instance.playCantMove (); 
-		} 
+		cA.updateArrayBool(goRight);
+
+		// if (!back)
+		// {
+		// 	rotateRight (true); 
+		// 	ManageAudio.instance.playCantMove (); 
+		// } 
 	}
 
 	//Perform rotation clockwards
 	public void rotateRight(bool back)
 	{
 		rotAngel = getRotAngle (rotAngel - 90); 
-		rotate (rotAngel / 90); 
+		rotate (rotAngel / 90);
 
-		if (!back && !cA.updateArrayBool (goRight))
-		{
-			rotateLeft (true); 
-			ManageAudio.instance.playCantMove (); 
-		} 
+		cA.updateArrayBool (goRight);
+
+		// if (!back)
+		// {
+		// 	rotateLeft (true); 
+		// 	ManageAudio.instance.playCantMove (); 
+		// } 
 	}
 		
 	int getRotAngle(int angle){

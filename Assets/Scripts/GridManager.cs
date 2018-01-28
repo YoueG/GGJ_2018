@@ -39,37 +39,42 @@ public class GridManager : MonoBehaviour {
 	{
 		isCube = new bool[m_width,m_height];
 
-		foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
-			if(cube.transform.parent != actualGroup)
-				isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
-
-		bool notTouching = true;
-
-		foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
+		if(actualGroup)
 		{
-			if(cube.transform.parent == actualGroup)
-			{
-				int x = (int)cube.transform.position.x;
-				int y = (int)cube.transform.position.y;
+			int pieceNb = actualGroup.childCount;
 
-				if(x*y <= isCube.Length && y >= 0 && y < m_height)
-				{
-					if (isCube[x, y])
-					{
-						notTouching = false;
-						Destroy(Instantiate(m_particles, cube.transform.position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
-					}
-				}
-				else
-				{
-					//Position is out of range 
-					notTouching = false;
-				}
+			Vector3[] temp = new Vector3[pieceNb];
+			Vector3 decal = Vector3.zero;
+
+			for (int i = 0; i < pieceNb; i++)
+			{
+				int y = (int)actualGroup.GetChild(i).position.y;
+
+				temp[i] = new Vector3((int)actualGroup.GetChild(i).position.x, y);
+
+				if(y < 0)
+					decal = Vector3.up;
+				else if (y >= m_height)
+					decal = Vector3.down;
 			}
 			
-		}
+			actualGroup.position += decal;
+			for (int i = 0; i < pieceNb; i++)
+				temp[i] += decal;
 
-		return notTouching;
+			foreach (GameObject cube in GameObject.FindGameObjectsWithTag("Cube"))
+				if(cube.transform.parent != actualGroup)
+					isCube [(int)cube.transform.position.x, (int)cube.transform.position.y] = true;
+
+			for (int i = 0; i < pieceNb; i++)
+				if(isCube[(int)temp[i].x, (int)temp[i].y])
+				{
+					Destroy(Instantiate(m_particles, actualGroup.GetChild(i).position, goRight ?  Quaternion.Euler(0,0,0) : Quaternion.Euler(0,180,0)), 3);
+					return false;					
+				}
+		}
+		
+		return true;
 	}
 
 	[SerializeField]
